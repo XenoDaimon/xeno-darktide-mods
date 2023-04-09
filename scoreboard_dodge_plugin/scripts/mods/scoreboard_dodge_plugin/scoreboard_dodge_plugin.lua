@@ -8,6 +8,7 @@ local scoreboard = get_mod("scoreboard")
 mod:hook(CLASS.PlayerCharacterStateDodging, "on_enter", function(func, self, unit, dt, t, previous_state, params)
     local dodge_direction = params.dodge_direction
     func(self, unit, dt, t, previous_state, params)
+
     -- Check scoreboard; could not be installed
     if scoreboard then
         local player = scoreboard:player_from_unit(unit)
@@ -16,12 +17,17 @@ mod:hook(CLASS.PlayerCharacterStateDodging, "on_enter", function(func, self, uni
             -- Bots don't have account ids; use name instead
             local account_id = player:account_id() or player:name()
             -- Update stat
-            if dodge_direction == "dodge_left" then
-                scoreboard:update_stat("scoreboard_dodge_left", account_id, 1)
-            else if dodge_direction == "dodge_right" then
+            local x_value = Vector3.x(dodge_direction)
+            local y_value = Vector3.y(dodge_direction)
+            local dodge_animation = nil
+
+            if math.abs(x_value) < math.abs(y_value) then
+                scoreboard:update_stat("scoreboard_dodge_bwd", account_id, 1)
+            elseif x_value > 0 then
                 scoreboard:update_stat("scoreboard_dodge_right", account_id, 1)
             else
-                scoreboard:update_stat("scoreboard_dodge_bwd", account_id, 1)
+                scoreboard:update_stat("scoreboard_dodge_left", account_id, 1)
+            end
         end
     end
 end)

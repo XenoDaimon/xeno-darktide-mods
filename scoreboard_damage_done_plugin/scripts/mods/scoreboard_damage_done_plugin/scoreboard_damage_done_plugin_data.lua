@@ -1,4 +1,4 @@
-local mod = get_mod("scoreboard_damage_taken_plugin")
+local mod = get_mod("scoreboard_damage_done_plugin")
 
 return {
 	name = mod:localize("mod_title"),
